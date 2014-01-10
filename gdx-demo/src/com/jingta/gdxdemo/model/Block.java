@@ -20,6 +20,8 @@ public class Block {
 	
 	public Block(Vector2 position) {
 		this.position = position;
+		this.bounds.setX(position.x);
+        this.bounds.setY(position.y);
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 	}

@@ -94,7 +94,8 @@ public class GameScreen implements Screen, InputProcessor {
 		if (screenX < width /2 && screenY > height /2) controller.leftPressed();
 		if (screenX > width /2 && screenY > height /2) controller.rightPressed();
 		if (screenX < width /2 && screenY < height /2) controller.jumpPressed(); //top left
-		if (screenX > width /2 && screenY > height /2) controller.firePressed(); // top right
+		//if (screenX > width /2 && screenY > height /2) controller.firePressed(); // top right
+		if (screenX > width /2 && screenY > height /2) controller.jumpPressed(); // top right
 		return true;
 	}
 
@@ -104,7 +105,8 @@ public class GameScreen implements Screen, InputProcessor {
 		if (screenX < width /2 && screenY > height /2) controller.leftReleased();
 		if (screenX > width /2 && screenY > height /2) controller.rightReleased();
 		if (screenX < width /2 && screenY < height /2) controller.jumpReleased(); //top left
-		if (screenX > width /2 && screenY > height /2) controller.fireReleased(); // top right
+		//if (screenX > width /2 && screenY > height /2) controller.fireReleased(); // top right
+		if (screenX > width /2 && screenY > height /2) controller.jumpReleased(); // top right
 		return true;
 	}
 

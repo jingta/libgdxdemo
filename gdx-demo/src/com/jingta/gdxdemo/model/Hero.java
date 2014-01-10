@@ -44,11 +44,18 @@ public class Hero {
 		return this.stateTime;
 	}
 	public void update(float delta) {
-		position.add(velocity.cpy().scl(delta));
+		//position.add(velocity.cpy().scl(delta));
 		this.stateTime +=delta;
+	}
+	public void setPosition(Vector2 position) {
+        this.position = position;
+		this.bounds.setX(position.x);
+        this.bounds.setY(position.y);
 	}
 	public Hero(Vector2 position){
 		this.position = position;
+		this.bounds.x = position.x;
+		this.bounds.y = position.y;
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
 	}

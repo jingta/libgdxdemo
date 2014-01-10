@@ -101,11 +101,24 @@ public class WorldRenderer {
 		drawBlocks();
 		drawHero();
 		spriteBatch.end();
-		if (debug) drawDebug();
+		
+		if (debug) {
+			drawDebug();
+			drawCollisionBlocks();
+		}
 	}
-	
+	private void drawCollisionBlocks() {
+		debugRenderer.setProjectionMatrix(cam.combined);
+		debugRenderer.begin(ShapeType.Filled);
+		debugRenderer.setColor(new Color(.8f, .8f, .8f, 0.8f));
+		for (Rectangle rect : world.getCollisionRects()) {
+			debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		}
+		debugRenderer.end();
+	}
+
 	private void drawBlocks(){
-		for (Block block: world.getBlocks()){
+		for (Block block: world.getDrawableBlocks((int)CAMERA_WIDTH, (int)CAMERA_HEIGHT)){
 			spriteBatch.draw(blockTexture, block.getPosition().x * ppux, block.getPosition().y * ppuy, 
 					Block.SIZE * ppux, Block.SIZE * ppuy);
 		}
@@ -133,20 +146,22 @@ public class WorldRenderer {
 		// render blocks
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.Line);
-		for (Block block : world.getBlocks()) {
+		for (Block block : world.getDrawableBlocks((int)CAMERA_WIDTH, (int)CAMERA_HEIGHT)) {
 			Rectangle r = block.getBounds();
-			float x1 = block.getPosition().x + r.getX();
-			float y1 = block.getPosition().y + r.getY();
+			//float x1 = block.getPosition().x + r.getX();
+			//float y1 = block.getPosition().y + r.getY();
 			debugRenderer.setColor(new Color(1, 0, 0, 1));
-			debugRenderer.rect(x1, y1, r.width, r.height);
+			//debugRenderer.rect(x1, y1, r.width, r.height);
+			debugRenderer.rect(r.x, r.y, r.width, r.height);
 		}
 		// render hero
 		Hero hero = world.getHero();
 		Rectangle r = hero.getBounds();
-		float x1 = hero.getPosition().x + r.getX();
-		float y1 = hero.getPosition().y + r.getY();
+		//float x1 = hero.getPosition().x + r.getX();
+		//float y1 = hero.getPosition().y + r.getY();
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
-		debugRenderer.rect(x1, y1, r.width, r.height);
+		//debugRenderer.rect(x1, y1, r.width, r.height);
+		debugRenderer.rect(r.x, r.y, r.width, r.height);
 		debugRenderer.end();
 	}
 }

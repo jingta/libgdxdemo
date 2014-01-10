@@ -3,6 +3,10 @@ package com.jingta.gdxdemo.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
+import com.jingta.gdxdemo.model.Block;
 import com.jingta.gdxdemo.model.Hero;
 import com.jingta.gdxdemo.model.World;
 
@@ -19,8 +23,19 @@ public class WorldController {
 	private World world;
 	private Hero hero;
 	
+	// This is the rectangle pool used in collision detection
+    // Good to avoid instantiation each frame
+    private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
+            @Override
+            protected Rectangle newObject() {
+                    return new Rectangle();
+            }
+    };
+	private Array<Block> collidable = new Array<Block>();
+	
 	private long jumpPressTime;
 	private boolean jumpPressed;
+	private boolean grounded = false;
 	
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -51,16 +66,17 @@ public class WorldController {
 	
 	public void update(float delta){
 		processInput();
-		
+		if (grounded && hero.getState().equals(Hero.State.JUMPING)) hero.setState(Hero.State.IDLE);
 		hero.getAcceleration().y = GRAVITY;
-		hero.getAcceleration().y *= delta;
 		hero.getAcceleration().x *= delta;
+		hero.getAcceleration().y *= delta;
 		hero.getVelocity().add(hero.getAcceleration());
+		checkCollisionWithBlocks(delta);
 		if (hero.getAcceleration().x == 0 && !hero.getState().equals(Hero.State.JUMPING)) hero.getVelocity().x *= DAMP;
 		if (hero.getVelocity().x > MAX_VELOCITY ) hero.getVelocity().x = MAX_VELOCITY;
 		if (hero.getVelocity().x < -MAX_VELOCITY) hero.getVelocity().x = -MAX_VELOCITY;
 		hero.update(delta);
-		
+
 		// TODO: some lame unfinished screen bounds
 		if (hero.getPosition().y < 0) {
 			hero.getPosition().y = 0f;
@@ -72,6 +88,68 @@ public class WorldController {
 			if (!hero.getState().equals(Hero.State.JUMPING)) hero.setState(Hero.State.IDLE);
 		}
 	}
+	private void checkCollisionWithBlocks(float delta) {
+		hero.getVelocity().x *= delta;
+		hero.getVelocity().y *= delta;
+		Rectangle heroRect = rectPool.obtain();
+		heroRect.set(hero.getBounds());
+		int startX;
+		int endX;
+		int startY = (int)hero.getBounds().y;
+		int endY = (int)(hero.getBounds().y + hero.getBounds().height);
+		if (hero.getVelocity().x < 0) {
+			startX = endX = (int)Math.floor(hero.getBounds().x + hero.getVelocity().x);
+		} else {
+			startX = endX = (int)Math.floor(hero.getBounds().x + hero.getVelocity().x + hero.getBounds().width);
+		}
+		populateCollidableBlocks(startX, startY, endX, endY);
+		heroRect.x += hero.getVelocity().x;
+		world.getCollisionRects().clear();
+		for (Block block : collidable) {
+			if (block == null) continue;
+			if (heroRect.overlaps(block.getBounds())) {
+				hero.getVelocity().x = 0;
+				world.getCollisionRects().add(block.getBounds());
+				break;
+			}
+		}
+		// now check upcoming y collisions
+		heroRect.x = hero.getPosition().x;
+		startX = (int)hero.getBounds().x;
+		endX = startX + (int)(Math.ceil(hero.getBounds().width));
+		if (hero.getVelocity().y < 0) {
+			startY = endY = (int) Math.floor(hero.getBounds().y + hero.getVelocity().y);
+		} else {
+			startY = endY = (int) Math.floor(hero.getBounds().y + hero.getVelocity().y + hero.getBounds().height);
+		}
+		populateCollidableBlocks(startX, startY, endX, endY);
+		heroRect.y += hero.getVelocity().y;
+		for (Block block : collidable) {
+			if (block == null) continue;
+			if (heroRect.overlaps(block.getBounds())) {
+				if (hero.getVelocity().y < 0) grounded = true;
+				hero.getVelocity().y = 0;
+				world.getCollisionRects().add(block.getBounds());
+				break;
+			}
+		}
+		heroRect.y = hero.getPosition().y;
+		hero.getPosition().add(hero.getVelocity());
+		hero.getBounds().x = hero.getPosition().x; //?????
+		hero.getBounds().y = hero.getPosition().y;
+		hero.getVelocity().x *= (1/delta);
+		hero.getVelocity().y *= (1/delta);
+	}
+	private void populateCollidableBlocks(int startX, int startY, int endX, int endY) {
+		collidable.clear();
+		for(int x = startX; x <= endX; x++){
+			for (int y = startY; y <= endY; y++){
+				if (x >= 0 && x < world.getLevel().getWidth() && y >= 0 && y < world.getLevel().getHeight()) {
+					collidable.add(world.getLevel().getBlock(x, y));
+				}
+			}
+		}
+	}
 	
 	private void processInput(){
 		// check what keys are down
@@ -79,6 +157,7 @@ public class WorldController {
 			if (!hero.getState().equals(Hero.State.JUMPING)) {
 				hero.setState(Hero.State.JUMPING);
 				hero.getVelocity().y = MAX_JUMP_SPEED;
+				grounded = false;
 				this.jumpPressed = true;
 				this.jumpPressTime = System.currentTimeMillis();
 			} else if (this.jumpPressed && (System.currentTimeMillis() - this.jumpPressTime > LONG_PRESS_JUMP)) {
