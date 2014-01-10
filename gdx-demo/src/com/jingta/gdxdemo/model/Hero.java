@@ -3,7 +3,7 @@ package com.jingta.gdxdemo.model;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Guy {
+public class Hero {
 	public enum State {
 		IDLE, WALKING, JUMPING, DYING
 	}
@@ -18,6 +18,7 @@ public class Guy {
 	
 	Rectangle bounds = new Rectangle();
 	State state = State.IDLE;
+	float stateTime = 0f;
 	
 	boolean facingLeft = true;
 	
@@ -36,8 +37,9 @@ public class Guy {
 	}
 	public void update(float delta) {
 		position.add(velocity.cpy().scl(delta));
+		this.stateTime +=delta;
 	}
-	public Guy(Vector2 position){
+	public Hero(Vector2 position){
 		this.position = position;
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;

@@ -3,13 +3,13 @@ package com.jingta.gdxdemo.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jingta.gdxdemo.model.Guy;
+import com.jingta.gdxdemo.model.Hero;
 import com.jingta.gdxdemo.model.World;
 
 public class WorldController {
 	public enum Keys { LEFT, RIGHT, JUMP, FIRE }
 	private World world;
-	private Guy hero;
+	private Hero hero;
 	
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -47,16 +47,16 @@ public class WorldController {
 		// check what keys are down
 		if (keys.get(Keys.LEFT)) {
 			hero.setFacingLeft(true);
-			hero.setState(Guy.State.WALKING);
-			hero.getVelocity().x = -Guy.SPEED;
+			hero.setState(Hero.State.WALKING);
+			hero.getVelocity().x = -Hero.SPEED;
 		}
 		if (keys.get(Keys.RIGHT)) {
 			hero.setFacingLeft(false);
-			hero.setState(Guy.State.WALKING);
-			hero.getVelocity().x = Guy.SPEED;
+			hero.setState(Hero.State.WALKING);
+			hero.getVelocity().x = Hero.SPEED;
 		}
 		if (keys.get(Keys.RIGHT) == keys.get(Keys.LEFT)){
-			hero.setState(Guy.State.IDLE);
+			hero.setState(Hero.State.IDLE);
 			hero.getAcceleration().x = 0;
 			hero.getVelocity().x = 0;
 		}

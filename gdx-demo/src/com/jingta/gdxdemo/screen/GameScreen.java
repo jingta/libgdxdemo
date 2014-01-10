@@ -1,5 +1,6 @@
 package com.jingta.gdxdemo.screen;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -87,6 +88,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (!Gdx.app.getType().equals(ApplicationType.Android)) return false;
 		if (screenX < width /2 && screenY > height /2) controller.leftPressed();
 		if (screenX > width /2 && screenY > height /2) controller.rightPressed();
 		return true;
@@ -94,6 +96,7 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		if (!Gdx.app.getType().equals(ApplicationType.Android)) return false;
 		if (screenX < width /2 && screenY > height /2) controller.leftReleased();
 		if (screenX > width /2 && screenY > height /2) controller.rightReleased();
 		return true;
@@ -101,6 +104,8 @@ public class GameScreen implements Screen, InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		if (!Gdx.app.getType().equals(ApplicationType.Android)) return false;
+
 		//fix for dragging past the touch zones
 		if (screenX < width /2 && screenY < height /2) controller.leftReleased();
 		if (screenX > width /2 && screenY < height /2) controller.rightReleased();

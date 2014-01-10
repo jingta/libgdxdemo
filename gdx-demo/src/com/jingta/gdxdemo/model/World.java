@@ -6,9 +6,9 @@ import com.badlogic.gdx.utils.Array;
 public class World {
 
 	Array<Block> blocks = new Array<Block>();
-	Guy hero;
+	Hero hero;
 	
-	public Guy getHero(){
+	public Hero getHero(){
 		return hero;
 	}
 	
@@ -24,7 +24,7 @@ public class World {
 	}
 	
 	public void createDemoWorld(){
-		this.hero = new Guy(new Vector2(7,2));
+		this.hero = new Hero(new Vector2(7,2));
 		for (int i = 0; i < 10; i++) {
 			blocks.add(new Block(new Vector2(i, 6)));
 			

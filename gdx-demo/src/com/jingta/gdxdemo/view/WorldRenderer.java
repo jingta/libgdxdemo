@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.jingta.gdxdemo.model.Block;
-import com.jingta.gdxdemo.model.Guy;
+import com.jingta.gdxdemo.model.Hero;
 import com.jingta.gdxdemo.model.World;
 
 public class WorldRenderer {
@@ -69,7 +69,7 @@ public class WorldRenderer {
 	}
 	private void drawHero(){
 		spriteBatch.draw(heroTexture, world.getHero().getPosition().x * ppux, world.getHero().getPosition().y * ppuy,
-				Guy.SIZE * ppux, Guy.SIZE * ppuy);
+				Hero.SIZE * ppux, Hero.SIZE * ppuy);
 	}
 	private void drawDebug(){
 		// render blocks
@@ -83,7 +83,7 @@ public class WorldRenderer {
 			debugRenderer.rect(x1, y1, r.width, r.height);
 		}
 		// render hero
-		Guy hero = world.getHero();
+		Hero hero = world.getHero();
 		Rectangle r = hero.getBounds();
 		float x1 = hero.getPosition().x + r.getX();
 		float y1 = hero.getPosition().y + r.getY();
