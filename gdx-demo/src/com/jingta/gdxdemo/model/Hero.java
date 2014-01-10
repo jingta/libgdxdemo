@@ -21,7 +21,9 @@ public class Hero {
 	float stateTime = 0f;
 	
 	boolean facingLeft = true;
-	
+	public boolean isFacingLeft(){
+		return this.facingLeft;
+	}
 	public void setFacingLeft(boolean facingLeft){
 		this.facingLeft = facingLeft;
 	}
@@ -32,8 +34,14 @@ public class Hero {
 	public Vector2 getVelocity() {
 		return this.velocity;
 	}
+	public State getState() {
+		return this.state;
+	}
 	public void setState(State state) {
 		this.state = state;
+	}
+	public float getStateTime(){
+		return this.stateTime;
 	}
 	public void update(float delta) {
 		position.add(velocity.cpy().scl(delta));

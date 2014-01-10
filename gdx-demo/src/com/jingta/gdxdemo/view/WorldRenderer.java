@@ -4,12 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.jingta.gdxdemo.model.Block;
 import com.jingta.gdxdemo.model.Hero;
+import com.jingta.gdxdemo.model.Hero.State;
 import com.jingta.gdxdemo.model.World;
 
 public class WorldRenderer {
@@ -19,9 +23,19 @@ public class WorldRenderer {
 	private static final float CAMERA_HEIGHT = 7f;
 	private OrthographicCamera cam;
 	
+	private static final float RUNNING_FRAME_DURATION = 0.06f;
+	
 	private SpriteBatch spriteBatch;
-	private Texture blockTexture;
-	private Texture heroTexture;
+	//private Texture blockTexture;
+	//private Texture heroTexture;
+	
+	private TextureRegion blockTexture;
+	private TextureRegion heroIdleLeft;
+	private TextureRegion heroIdleRight;
+	private TextureRegion heroFrame;
+	private Animation walkLeftAnimation;
+	private Animation walkRightAnimation;
+	
 	
 	private boolean debug = false;
 	ShapeRenderer debugRenderer = new ShapeRenderer(); //debugging?
@@ -43,8 +57,23 @@ public class WorldRenderer {
 	public void loadTextures() {
 		Texture.setEnforcePotImages(false); // HACK HACK HACK ingnore power of two
 		//blockTexture = new Texture(Gdx.files.internal("images/block.png"));
-		blockTexture = new Texture(Gdx.files.internal("images/beaten_brick_tiled.png"));
-		heroTexture = new Texture(Gdx.files.internal("images/hero_01.png"));
+		//blockTexture = new Texture(Gdx.files.internal("images/beaten_brick_tiled.png"));
+		//heroTexture = new Texture(Gdx.files.internal("images/hero_01.png"));
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("images/textures/textures.pack"));
+		heroIdleLeft = atlas.findRegion("hero",1);
+		heroIdleRight = new TextureRegion(heroIdleLeft);
+		heroIdleRight.flip(true, false);
+		blockTexture = atlas.findRegion("beaten_brick_tiled");
+		TextureRegion[] walkLeftFrames = new TextureRegion[5];
+		TextureRegion[] walkRightFrames = new TextureRegion[5];
+		for (int i = 0; i < 5; i++) {
+			walkLeftFrames[i] = atlas.findRegion("hero", i+2);
+			walkRightFrames[i] = new TextureRegion(walkLeftFrames[i]);
+			walkRightFrames[i].flip(true, false);
+		}
+		walkLeftAnimation = new Animation(RUNNING_FRAME_DURATION, walkLeftFrames);
+		walkRightAnimation = new Animation(RUNNING_FRAME_DURATION, walkRightFrames);
+		
 	}
 	public void setSize(int w, int h){
 		this.width = w;
@@ -68,7 +97,16 @@ public class WorldRenderer {
 		}
 	}
 	private void drawHero(){
-		spriteBatch.draw(heroTexture, world.getHero().getPosition().x * ppux, world.getHero().getPosition().y * ppuy,
+		//spriteBatch.draw(heroTexture, world.getHero().getPosition().x * ppux, world.getHero().getPosition().y * ppuy,
+		//		Hero.SIZE * ppux, Hero.SIZE * ppuy);
+		Hero hero = world.getHero();
+		heroFrame = hero.isFacingLeft() ? heroIdleLeft : heroIdleRight;
+		if (hero.getState().equals(Hero.State.WALKING)) {
+			heroFrame = hero.isFacingLeft() ? 
+					walkLeftAnimation.getKeyFrame(hero.getStateTime(), true) : 
+					walkRightAnimation.getKeyFrame(hero.getStateTime(), true);
+		}
+		spriteBatch.draw(heroFrame, hero.getPosition().x * ppux, hero.getPosition().y * ppuy, 
 				Hero.SIZE * ppux, Hero.SIZE * ppuy);
 	}
 	private void drawDebug(){
