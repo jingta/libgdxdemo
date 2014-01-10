@@ -14,18 +14,22 @@ import com.jingta.gdxdemo.model.World;
 
 public class WorldRenderer {
 	private World world;
+
+	private static final float CAMERA_WIDTH = 10f;
+	private static final float CAMERA_HEIGHT = 7f;
 	private OrthographicCamera cam;
+	
 	private SpriteBatch spriteBatch;
-	private boolean debug = false;
-	ShapeRenderer debugRenderer = new ShapeRenderer(); //debugging?
 	private Texture blockTexture;
 	private Texture heroTexture;
+	
+	private boolean debug = false;
+	ShapeRenderer debugRenderer = new ShapeRenderer(); //debugging?
+	
 	private int width;
 	private int height;
 	private float ppux; // pixels per unit, x axis
 	private float ppuy; // pixels per unit, y axis
-	private static final float CAMERA_WIDTH = 10f;
-	private static final float CAMERA_HEIGHT = 7f;
 	
 	public WorldRenderer(World world, boolean debug) {
 		this.world = world;
@@ -37,8 +41,10 @@ public class WorldRenderer {
 		loadTextures();
 	}
 	public void loadTextures() {
-		blockTexture = new Texture(Gdx.files.internal("images/block.png"));
-		heroTexture = new Texture(Gdx.files.internal("images/hero.png"));
+		Texture.setEnforcePotImages(false); // HACK HACK HACK ingnore power of two
+		//blockTexture = new Texture(Gdx.files.internal("images/block.png"));
+		blockTexture = new Texture(Gdx.files.internal("images/beaten_brick_tiled.png"));
+		heroTexture = new Texture(Gdx.files.internal("images/hero_01.png"));
 	}
 	public void setSize(int w, int h){
 		this.width = w;
@@ -52,15 +58,18 @@ public class WorldRenderer {
 		drawBlocks();
 		drawHero();
 		spriteBatch.end();
-		
 		if (debug) drawDebug();
 	}
 	
 	private void drawBlocks(){
-		
+		for (Block block: world.getBlocks()){
+			spriteBatch.draw(blockTexture, block.getPosition().x * ppux, block.getPosition().y * ppuy, 
+					Block.SIZE * ppux, Block.SIZE * ppuy);
+		}
 	}
 	private void drawHero(){
-		
+		spriteBatch.draw(heroTexture, world.getHero().getPosition().x * ppux, world.getHero().getPosition().y * ppuy,
+				Guy.SIZE * ppux, Guy.SIZE * ppuy);
 	}
 	private void drawDebug(){
 		// render blocks
