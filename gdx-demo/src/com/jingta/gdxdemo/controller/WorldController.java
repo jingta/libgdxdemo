@@ -3,7 +3,6 @@ package com.jingta.gdxdemo.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.badlogic.gdx.math.Matrix3;
 import com.jingta.gdxdemo.model.Hero;
 import com.jingta.gdxdemo.model.World;
 
@@ -14,7 +13,7 @@ public class WorldController {
 	private static final float ACCELERATION = 20f;
 	private static final float GRAVITY = -20f;
 	private static final float MAX_JUMP_SPEED = 7f;
-	private static final float DAMP = 0.090f;
+	private static final float DAMP = 0.60f;
 	private static final float MAX_VELOCITY = 4f;
 	
 	private World world;
@@ -54,7 +53,8 @@ public class WorldController {
 		processInput();
 		
 		hero.getAcceleration().y = GRAVITY;
-		hero.getAcceleration().mul(delta);
+		hero.getAcceleration().y *= delta;
+		hero.getAcceleration().x *= delta;
 		hero.getVelocity().add(hero.getAcceleration());
 		if (hero.getAcceleration().x == 0 && !hero.getState().equals(Hero.State.JUMPING)) hero.getVelocity().x *= DAMP;
 		if (hero.getVelocity().x > MAX_VELOCITY ) hero.getVelocity().x = MAX_VELOCITY;

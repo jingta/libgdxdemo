@@ -68,6 +68,8 @@ public class GameScreen implements Screen, InputProcessor {
 		if (keycode == Keys.RIGHT) controller.rightPressed();
 		if (keycode == Keys.Z) controller.jumpPressed();
 		if (keycode == Keys.X) controller.firePressed();
+		if (keycode == Keys.D) renderer.toggleDebug();
+		
 		return true;
 	}
 
@@ -91,6 +93,8 @@ public class GameScreen implements Screen, InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android)) return false;
 		if (screenX < width /2 && screenY > height /2) controller.leftPressed();
 		if (screenX > width /2 && screenY > height /2) controller.rightPressed();
+		if (screenX < width /2 && screenY < height /2) controller.jumpPressed(); //top left
+		if (screenX > width /2 && screenY > height /2) controller.firePressed(); // top right
 		return true;
 	}
 
@@ -99,6 +103,8 @@ public class GameScreen implements Screen, InputProcessor {
 		if (!Gdx.app.getType().equals(ApplicationType.Android)) return false;
 		if (screenX < width /2 && screenY > height /2) controller.leftReleased();
 		if (screenX > width /2 && screenY > height /2) controller.rightReleased();
+		if (screenX < width /2 && screenY < height /2) controller.jumpReleased(); //top left
+		if (screenX > width /2 && screenY > height /2) controller.fireReleased(); // top right
 		return true;
 	}
 
