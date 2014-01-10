@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.jingta.gdxdemo.model.Block;
 import com.jingta.gdxdemo.model.Hero;
-import com.jingta.gdxdemo.model.Hero.State;
 import com.jingta.gdxdemo.model.World;
 
 public class WorldRenderer {

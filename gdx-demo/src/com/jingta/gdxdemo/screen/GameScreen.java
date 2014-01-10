@@ -109,8 +109,14 @@ public class GameScreen implements Screen, InputProcessor {
 		//fix for dragging past the touch zones
 		if (screenX < width /2 && screenY < height /2) controller.leftReleased();
 		if (screenX > width /2 && screenY < height /2) controller.rightReleased();
-		if (screenX > width /2 && screenY > height /2) controller.leftReleased();
-		if (screenX < width /2 && screenY > height /2) controller.rightReleased();
+		if (screenX > width /2 && screenY > height /2) {
+			controller.leftReleased();
+			controller.rightPressed();
+		}
+		if (screenX < width /2 && screenY > height /2) {
+			controller.rightReleased();
+			controller.leftPressed();
+		}
 		return true;
 	}
 
