@@ -8,7 +8,7 @@ public class Guy {
 		IDLE, WALKING, JUMPING, DYING
 	}
 	
-	static final float SPEED = 2f;
+	public static final float SPEED = 2f;
 	static final float JUMP_VELOCITY = 1f;
 	public static final float SIZE = 0.5f;
 	
@@ -21,6 +21,22 @@ public class Guy {
 	
 	boolean facingLeft = true;
 	
+	public void setFacingLeft(boolean facingLeft){
+		this.facingLeft = facingLeft;
+	}
+	
+	public Vector2 getAcceleration(){
+		return this.acceleration;
+	}
+	public Vector2 getVelocity() {
+		return this.velocity;
+	}
+	public void setState(State state) {
+		this.state = state;
+	}
+	public void update(float delta) {
+		position.add(velocity.cpy().scl(delta));
+	}
 	public Guy(Vector2 position){
 		this.position = position;
 		this.bounds.height = SIZE;
