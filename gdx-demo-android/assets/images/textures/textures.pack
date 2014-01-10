@@ -1,0 +1,61 @@
+
+textures.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+beaten_brick_tiled
+  rotate: false
+  xy: 2, 58
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+block
+  rotate: false
+  xy: 2, 8
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+hero
+  rotate: false
+  xy: 68, 94
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: 1
+hero
+  rotate: false
+  xy: 68, 64
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: 2
+hero
+  rotate: false
+  xy: 94, 94
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: 5
+hero
+  rotate: false
+  xy: 94, 64
+  size: 24, 28
+  orig: 24, 28
+  offset: 0, 0
+  index: 6
+hero
+  rotate: false
+  xy: 52, 30
+  size: 24, 26
+  orig: 24, 26
+  offset: 0, 0
+  index: 3
+hero
+  rotate: false
+  xy: 52, 2
+  size: 24, 26
+  orig: 24, 26
+  offset: 0, 0
+  index: 4
